@@ -1,0 +1,152 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --surface-base: #050505;
+  --surface-raised: #09090b;
+  --surface-muted: #111113;
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --card: rgba(255, 255, 255, 0.04);
+  --card-strong: rgba(0, 0, 0, 0.35);
+  --control: rgba(255, 255, 255, 0.06);
+  --control-hover: rgba(255, 255, 255, 0.1);
+  --border-subtle: rgba(212, 175, 55, 0.25);
+  --border-muted: rgba(255, 255, 255, 0.1);
+  --table-head: rgba(255, 255, 255, 0.055);
+  --table-row-hover: rgba(255, 255, 255, 0.045);
+  --input-bg: rgba(255, 255, 255, 0.06);
+  --sidebar-bg: rgba(5, 5, 5, 0.78);
+  --topbar-bg: rgba(5, 5, 5, 0.72);
+  --modal-bg: rgba(9, 9, 11, 0.94);
+  --badge-muted-bg: rgba(255, 255, 255, 0.055);
+  --grid-line: rgba(212, 175, 55, 0.08);
+  --gold-aura: rgba(212, 175, 55, 0.24);
+  --body-aura-one: rgba(212, 175, 55, 0.16);
+  --body-aura-two: rgba(245, 215, 110, 0.1);
+  --public-shell: #050505;
+  --public-header: rgba(5, 5, 5, 0.78);
+  --public-panel: rgba(9, 9, 11, 0.82);
+  --public-panel-solid: #09090b;
+  --public-control: rgba(255, 255, 255, 0.06);
+  --public-control-hover: rgba(255, 255, 255, 0.1);
+  --public-visual: rgba(5, 5, 5, 0.72);
+  --public-border: rgba(212, 175, 55, 0.24);
+  background: var(--surface-base);
+}
+
+.theme-light {
+  color-scheme: light;
+  --surface-base: #fafaf7;
+  --surface-raised: #ffffff;
+  --surface-muted: #eef2f7;
+  --text-primary: #111827;
+  --text-secondary: #475569;
+  --card: rgba(255, 255, 255, 0.92);
+  --card-strong: rgba(255, 255, 255, 0.86);
+  --control: rgba(15, 23, 42, 0.05);
+  --control-hover: rgba(15, 23, 42, 0.08);
+  --border-subtle: rgba(212, 175, 55, 0.25);
+  --border-muted: rgba(17, 24, 39, 0.1);
+  --table-head: rgba(17, 24, 39, 0.045);
+  --table-row-hover: rgba(17, 24, 39, 0.04);
+  --input-bg: rgba(255, 255, 255, 0.86);
+  --sidebar-bg: rgba(255, 255, 255, 0.9);
+  --topbar-bg: rgba(255, 255, 255, 0.88);
+  --modal-bg: rgba(255, 255, 255, 0.96);
+  --badge-muted-bg: rgba(17, 24, 39, 0.045);
+  --grid-line: rgba(159, 125, 27, 0.12);
+  --gold-aura: rgba(212, 175, 55, 0.2);
+  --body-aura-one: rgba(212, 175, 55, 0.14);
+  --body-aura-two: rgba(14, 165, 233, 0.08);
+  --public-shell: #fafaf7;
+  --public-header: rgba(255, 255, 255, 0.88);
+  --public-panel: rgba(255, 255, 255, 0.9);
+  --public-panel-solid: #ffffff;
+  --public-control: rgba(17, 24, 39, 0.05);
+  --public-control-hover: rgba(17, 24, 39, 0.08);
+  --public-visual: rgba(255, 255, 255, 0.82);
+  --public-border: rgba(159, 125, 27, 0.22);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 18% 12%, var(--body-aura-one), transparent 28%),
+    radial-gradient(circle at 78% 0%, var(--body-aura-two), transparent 22%),
+    var(--surface-base);
+  color: var(--text-primary);
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+::selection {
+  background: rgba(212, 175, 55, 0.35);
+  color: #fff;
+}
+
+.glass-border {
+  position: relative;
+}
+
+.glass-border::before {
+  background: linear-gradient(135deg, rgba(245, 215, 110, 0.45), transparent 35%, rgba(255, 255, 255, 0.08));
+  border-radius: inherit;
+  content: "";
+  inset: 0;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  padding: 1px;
+  pointer-events: none;
+  position: absolute;
+}
+
+.theme-light .bg-obsidian-grid {
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+}
+
+.theme-light [class*="from-transparent"][class*="via-gold"] {
+  opacity: 0.7;
+}
+
+.public-site {
+  background:
+    radial-gradient(circle at 16% 8%, var(--body-aura-one), transparent 28%),
+    radial-gradient(circle at 82% 2%, var(--body-aura-two), transparent 24%),
+    var(--public-shell);
+}
+
+.public-card {
+  background: var(--public-panel);
+  border-color: var(--public-border);
+}
+
+.public-control {
+  background: var(--public-control);
+}
+
+.skeleton {
+  background: linear-gradient(90deg, rgba(255,255,255,0.04), rgba(245,215,110,0.12), rgba(255,255,255,0.04));
+  overflow: hidden;
+  position: relative;
+}
+
+.skeleton::after {
+  animation: shimmer 1.8s infinite;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.14), transparent);
+  content: "";
+  inset: 0;
+  position: absolute;
+  transform: translateX(-100%);
+}
