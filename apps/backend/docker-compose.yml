@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: 7gg-pay-wallet-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: 7gg_pay_wallet_mvp
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - 7gg_pay_wallet_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d 7gg_pay_wallet_mvp"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  7gg_pay_wallet_pgdata:

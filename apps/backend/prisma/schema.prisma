@@ -1,0 +1,147 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum ChainAsset {
+  USDT_TRON
+  USDT_ETH
+  USDC_ETH
+  BTC
+  ETH
+}
+
+enum DepositStatus {
+  DETECTED
+  AML_SCREENING
+  CLEARED
+  ISOLATED
+  SWEEP_PENDING
+  SWEPT
+  CREDITED
+}
+
+enum RiskLevel {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum SweepStatus {
+  PENDING
+  COMPLETED
+  BLOCKED
+}
+
+model User {
+  id              String          @id @default(cuid())
+  email           String          @unique
+  passwordHash    String
+  role            Role            @default(USER)
+  walletAddresses WalletAddress[]
+  deposits        Deposit[]
+  auditLogs       AuditLog[]
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@map("users")
+}
+
+model WalletAddress {
+  id              String     @id @default(cuid())
+  userId          String
+  user            User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chainAsset      ChainAsset
+  address         String     @unique
+  isActive        Boolean    @default(true)
+  deposits        Deposit[]
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  @@unique([userId, chainAsset])
+  @@index([userId])
+  @@index([chainAsset])
+  @@map("wallet_addresses")
+}
+
+model Deposit {
+  id              String              @id @default(cuid())
+  userId          String
+  user            User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  walletAddressId String
+  walletAddress   WalletAddress       @relation(fields: [walletAddressId], references: [id])
+  chainAsset      ChainAsset
+  txHash          String              @unique
+  sourceAddress   String
+  amount          Decimal             @db.Decimal(24, 8)
+  status          DepositStatus       @default(DETECTED)
+  riskLevel       RiskLevel?
+  amlResult       AmlScreeningResult?
+  sweepTxs        SweepTransaction[]
+  auditLogs       AuditLog[]
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  @@index([userId])
+  @@index([walletAddressId])
+  @@index([status])
+  @@index([riskLevel])
+  @@index([chainAsset])
+  @@map("deposits")
+}
+
+model AmlScreeningResult {
+  id              String     @id @default(cuid())
+  depositId       String     @unique
+  deposit         Deposit    @relation(fields: [depositId], references: [id], onDelete: Cascade)
+  riskScore       Int
+  riskLevel       RiskLevel
+  provider        String     @default("7GG_AML_MOCK")
+  reason          String
+  createdAt       DateTime   @default(now())
+
+  @@index([riskLevel])
+  @@map("aml_screening_results")
+}
+
+model SweepTransaction {
+  id              String      @id @default(cuid())
+  depositId       String
+  deposit         Deposit     @relation(fields: [depositId], references: [id], onDelete: Cascade)
+  fromAddress     String
+  toAddress       String
+  txHash          String?
+  amount          Decimal     @db.Decimal(24, 8)
+  status          SweepStatus @default(PENDING)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  @@index([depositId])
+  @@index([status])
+  @@map("sweep_transactions")
+}
+
+model AuditLog {
+  id              String    @id @default(cuid())
+  userId          String?
+  user            User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  depositId       String?
+  deposit         Deposit?  @relation(fields: [depositId], references: [id], onDelete: SetNull)
+  action          String
+  metadata        Json?
+  createdAt       DateTime  @default(now())
+
+  @@index([userId])
+  @@index([depositId])
+  @@index([action])
+  @@map("audit_logs")
+}
