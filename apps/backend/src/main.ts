@@ -6,7 +6,12 @@ import { AppModule } from "./app.module";
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
-  app.enableCors();
+
+  const frontendUrl = process.env.FRONTEND_URL;
+  app.enableCors({
+    origin: frontendUrl ? frontendUrl.split(",").map((url) => url.trim()) : true,
+    credentials: true
+  });
 
   const config = new DocumentBuilder()
     .setTitle("7GG Pay Wallet Backend MVP")

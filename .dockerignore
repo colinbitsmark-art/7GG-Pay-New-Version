@@ -1,0 +1,14 @@
+node_modules
+.next
+.git
+.gitignore
+**/.env
+**/.env.*
+!**/.env.example
+apps/backend/dist
+apps/backend/coverage
+**/*.md
+.cursor
+terminals
+tsconfig.tsbuildinfo
+docker-compose.yml
